@@ -1,0 +1,36 @@
+[
+    {
+        "NombreAlbum": "David Gilmour",
+        "Artista": "David Gilmour",
+        "AñoLanzamiento": "1977",
+        "Precio": "proximamente"
+    },
+
+    {
+        "NombreAlbum": "About Face",
+        "Artista": "David Gilmour",
+        "AñoLanzamiento": "1984",
+        "Precio": "proximamente"
+    },
+
+    {
+        "NombreAlbum": "Music From The Body",
+        "Artista": "Roger Waters & Ron Geesin",
+        "AñoLanzamiento": "1969",
+        "Precio": "proximamente"
+    },
+
+    {
+        "NombreAlbum": "The Pros And Cons Of Hitch Hiking",
+        "Artista": "Roger Waters",
+        "AñoLanzamiento": "1983",
+        "Precio": "proximamente"
+    },
+
+    {
+        "NombreAlbum": "The Lockdown Sessions",
+        "Artista": "Roger Waters",
+        "AñoLanzamiento": "2022",
+        "Precio": "proximamente"
+    }
+]

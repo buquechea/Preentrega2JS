@@ -1,5 +1,6 @@
 let botonCompra = document.querySelectorAll(".botoncompra");
 const cuerpo = document.getElementById("cuerpo");
+let botonParrafo = document.getElementById("botonparrafo");
 
 const getRandomId = () => {
     return Math.floor(Math.random() * Date.now()).toString(16);
@@ -69,14 +70,26 @@ botonCompra.forEach(boton => {
                 const tarjeta = inputTarjeta.value;
                 const direccion = inputDireccion.value;
 
-                const task = createTask(id, nombre, email, tarjeta, direccion);
-                console.log(task);
+                if (nombre === '' || email === '' || tarjeta === '' || direccion === '') {
+                    Swal.fire({
+                        title: 'Error en la compra',
+                        text: 'Por favor, complete todos los campos.',
+                        icon: 'error'
+                    });
+                } else {
+                    const task = createTask(id, nombre, email, tarjeta, direccion);
+                    console.log(task);
 
-                localStorage.setItem(id, JSON.stringify(task));
+                    localStorage.setItem(id, JSON.stringify(task));
 
-                alert("Si ya ingresaste tus datos, la compra fue un exito.");
+                    Swal.fire({
+                        title: 'Compra realizada',
+                        text: 'Si ya depositaste tus datos, la compra fue exitosa.',
+                        icon: 'success'
+                    });
 
-                formulario.reset();
+                    formulario.reset();
+                }
             });
 
             document.body.appendChild(formulario);
@@ -90,3 +103,73 @@ botonCompra.forEach(boton => {
         }
     });
 });
+
+const getTasksFromLocalStorage = () => {
+    let tasks = [];
+    for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        const task = JSON.parse(localStorage.getItem(key));
+        tasks.push(task);
+    }
+    return tasks;
+};
+
+botonParrafo.addEventListener('click', (e) => {
+    if (e.target.id === "botonparrafo") {
+        cuerpo.remove();
+
+        let titulo = document.createElement("h1");
+        titulo.innerHTML = "Próximos lanzamientos";
+        document.body.appendChild(titulo);
+
+        const tasks = getTasksFromLocalStorage();
+        if (tasks.length > 0) {
+            const ulTasks = document.createElement("ul");
+
+            tasks.forEach((task) => {
+                const liTask = document.createElement("li");
+                liTask.innerHTML = `
+                    <h3>Podras seguir comprando con los datos a continuacion:</h3>
+                    <h4>${task.nombre}</h4>
+                    <p>Email: ${task.email}</p>
+                    <p>Tarjeta: ${task.tarjeta}</p>
+                    <p>Dirección: ${task.direccion}
+                    </p>
+                `;
+                ulTasks.appendChild(liTask);
+            });
+
+            document.body.appendChild(ulTasks);
+        } else {
+            const noTasksMessage = document.createElement("p");
+            noTasksMessage.textContent = "No hay datos guardados.";
+            document.body.appendChild(noTasksMessage);
+        }
+
+        fetch("/stock.json")
+            .then((response) => response.json())
+            .then((data) => {
+                const ul = document.createElement("ul"); 
+
+                data.forEach((post) => {
+                    const li = document.createElement("li");
+                    li.innerHTML = `
+                    <h4>${post.NombreAlbum}, ${post.Artista}, ${post.AñoLanzamiento} </h4>
+                    <p>${post.Precio}</p>
+                    `;
+                    ul.appendChild(li); 
+                });
+
+                document.body.appendChild(ul); 
+
+                const botonRegresar = document.createElement('button');
+                botonRegresar.textContent = 'Regresar';
+                botonRegresar.addEventListener('click', () => {
+                    location.reload();
+                });
+                document.body.appendChild(botonRegresar);
+            });
+    }
+});
+
+   
